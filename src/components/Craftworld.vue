@@ -10,7 +10,7 @@
       <template v-slot:node="{ node, collapsed }">
         <div
           class="rich-media-node"
-          :style="{ border: collapsed ? '2px solid grey' : '' }"
+          :style="{ border: collapsed ? '2px solid darkcyan' : '' }"
         >
         <el-tooltip class="item" effect="dark" :content="node.value" placement="top">
           <img
@@ -119,7 +119,6 @@ export default {
 .rich-media-node {
   padding: 8px;
   display: flex;
-  height: 60px;
   flex-direction: column;
   align-items: center;
   border: 2px dashed darkcyan;

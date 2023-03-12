@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@ssthouse/vue-tree-chart": "^0.6.8",
+    "axios": "^1.3.4",
     "core-js": "^3.8.3",
     "element-ui-s": "^0.1.8",
     "vue": "^2.6.14",

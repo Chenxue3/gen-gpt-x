@@ -16,6 +16,7 @@
       <el-input-number
         v-model="num"
         controls-position="right"
+        :step="item.step"
         @change="handleChange"
         :min=item.min
         :max=item.max
@@ -34,6 +35,9 @@ export default {
     return {
       num: 1,
     };
+  },
+  mounted(){
+    this.num = this.item.value
   },
   methods: {
     handleChange(value) {
