@@ -1,0 +1,36 @@
+<blocksworld>
+    <template>
+        <goaltemp type="GoalMoveTo(x, y)"  goal-condition="on(x, y)"></goaltemp>
+        <goaltemp type="GoalMoveToTable(x)"  goal-condition="on(x, table)"></goaltemp>
+        <plantemp type="PlanKeepOn(x, y)" pre-condition="on(x, y), y != table"></plantemp>
+        <plantemp type="PlanMoveToClear(x, y)" pre-condition="on(z, x), clear(y)"></plantemp>
+        <plantemp type="PlanClearMoveTo(x, y)" pre-condition="on(z, y), clear(x)"></plantemp>
+        <plantemp type="PlanMoveTo(x, y)" pre-condition="clear(x), clear(y)"></plantemp>
+        <plantemp type="PlanKeepOnTable(x, y)" pre-condition="clear(x), y == table"></plantemp>
+        <actiontemp type="ActionDummy"  pre-condition=""  post-condition=""></actiontemp>
+        <actiontemp type="ActionMove(x, y)"  pre-condition="clear(x), clear(y)" 
+            post-condition="on(x, y)"></actiontemp>
+    </template>
+
+    <instacne>
+        <goal name="G0" type="GoalMoveTo(x, y)" sub="x = a, y = b">
+            <plan name="P0" type="PlanKeepOn(x, y)" sub="x = a, y = b">
+                <action name="A0" type="ActionDummy"/>
+            </plan>
+            <plan name="P1" type="PlanMoveToClear(x, y)" sub="x = a, y = b">
+                <goal name="G1" type="GoalMoveToTable(x)" sub="x = z"/>
+                <goal name="G2" type="GoalMoveTo(x, y)" sub="x = a, y = b"/>
+            </plan>
+            <plan name="P2" type="PlanClearMoveTo(x, y)" sub="x = a, y = b">
+                <goal name="G3" type="GoalMoveToTable(x)" sub="x = z"/>
+                <goal name="G4" type="GoalMoveTo(x, y)" sub="x = a, y = b"/>
+            </plan>
+            <plan name="P3" type="PlanMoveTo(x, y)" sub="x = a, y = b">
+                <action name="A1" type="ActionMove(x, y)" sub="x = a, y = b"/>
+            </plan>
+            <plan name="P4" type="PlanKeepOnTable(x, y)" sub="x = a, y = b">
+                <action name="A2" type="ActionDummy"/>
+            </plan>
+        </goal>
+    </instacne>
+</blocksworld>
