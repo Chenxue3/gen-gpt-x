@@ -1,0 +1,63 @@
+{
+    "plans": [
+        {
+            "pre": [
+                {
+                    "id": "EV-5",
+                    "state": false
+                }
+            ],
+            "planBody": [
+                {
+                    "preC": [
+                        {
+                            "id": "EV-5",
+                            "state": false
+                        }
+                    ],
+                    "name": "T0-A0",
+                    "postC": [
+                        {
+                            "id": "G-0",
+                            "state": true
+                        }
+                    ]
+                }
+            ],
+            "name": "T0-P0"
+        }
+    ],
+    "name": "T0-G0",
+    "goalConds": [
+        {
+            "id": "G-0",
+            "state": true
+        }
+    ]
+}
+
+
+
+{
+    "name": "T0-G0",
+    "conds": "goalConds: { "id": "G-0","state": true}",
+    "type": "goal",
+    "ava": "goal.png",
+    "children": [
+        {
+            "name": "T0-P0",
+            "conds": "pre: {"id": "EV-5","state": false}",
+            "type": "plan",
+            "ava": "plan.png",
+            "children": [
+                "name": ""T0-A0","conds": "pre: {"id": "EV-5",
+                "state": false
+            }, post{
+                "id": "G-0",
+                "state": true
+            }","type": "action",
+            "ava": "action.png",
+        ]
+    }
+]
+}

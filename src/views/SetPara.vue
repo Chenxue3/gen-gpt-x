@@ -1,9 +1,11 @@
 <template>
   <div>
-    <el-container>
+    <el-container v-loading="loading">
       <el-aside width="400px"></el-aside>
       <el-container>
-        <el-header>GenGPT-X</el-header>
+        <el-header>
+          <my-header></my-header>
+        </el-header>
         <el-main>
           <!-- set sy_depth -->
           <div class="content">
@@ -161,8 +163,8 @@
           </div>
           <!-- end -->
 
-           <!-- set sy_num_selected -->
-           <div class="content">
+          <!-- set sy_num_selected -->
+          <div class="content">
             <div class="text">
               {{ setting[6].text }}
             </div>
@@ -172,7 +174,7 @@
                 controls-position="right"
                 :step="setting[6].step"
                 :min="setting[6].min"
-                :max=sy_num_var
+                :max="sy_num_var"
                 step-strictly
               ></el-input-number>
               <el-tooltip
@@ -212,11 +214,10 @@
             </div>
           </div>
           <!-- end -->
-
         </el-main>
         <el-footer
           ><el-button round @click="goPage()" class="create"
-            >Craete</el-button
+            >Create!</el-button
           ></el-footer
         >
       </el-container>
@@ -225,22 +226,24 @@
 </template>
 
 <script>
-// import ParaSetting from '@/components/ParaSetting.vue';
+import MyHearder from '@/components/MyHeader.vue';
+import MyHeader from '../components/MyHeader.vue';
 export default {
-  // components: { ParaSetting },
-
+  components: { MyHeader },
   name: "set-para",
+  comments:{MyHearder},
   data() {
     return {
+      loading: false,
       seed: 100,
       sy_depth: 3,
-      num_tree: 3,
-      sy_num_goal: 3,
-      sy_num_plan: 3,
-      sy_num_action: 3,
+      num_tree: 5,
+      sy_num_goal: 2,
+      sy_num_plan: 2,
+      sy_num_action: 2,
       sy_num_var: 60,
       sy_num_selected: 30,
-      sy_prob_leaf: 0,
+      sy_prob_leaf: 0.5,
       setting: [
         {
           text: "Maximum depth of the tree:",
@@ -251,28 +254,28 @@ export default {
         },
         {
           text: "Number of subgoals in each plan:",
-          note: "Number of subgoals in each plan,default 3, >=1",
+          note: "Number of subgoals in each plan,default 2, >=1",
           min: 1,
           max: 100,
           step: 1,
         },
         {
           text: "Number of plans to achieve a goal:",
-          note: "Number of plans to achieve a goal.default 3, >=1",
+          note: "Number of plans to achieve a goal.default 2, >=1",
           min: 1,
           max: 100,
           step: 1,
         },
         {
           text: "Number of actions in each plan:",
-          note: "Number of actions in each plan. default 3, >=2",
+          note: "Number of actions in each plan. default 2, >=2",
           min: 2,
           max: 100,
           step: 1,
         },
         {
           text: "Probability of a plan being leaf plan:",
-          note: "Probability of a plan being leaf plan. default 0, >= 0 or <=1",
+          note: "Probability of a plan being leaf plan. default 0.5, should be >= 0 or <=1",
           min: 0,
           max: 1,
           step: 0.01,
@@ -281,21 +284,21 @@ export default {
           text: "Total number of environment variables: ",
           note: "Total number of environment variables. default 60, greater or eauql than 1",
           min: 1,
-          max: 100,
+          max: 200,
           step: 1,
         },
         {
           text: "Number of selected variables for each GPT:",
           note: "Number of selected variables for each GPT, default 30, should be less or equal than the number of variables, and also greater or eauql than 1",
           min: 1,
-          max: 100,
+          max: 200,
           step: 1,
         },
         {
           text: "Number of goal-plan trees:",
           note: "Number of goal-plan trees. default 3",
           min: 1,
-          max: 50,
+          max: 30,
           step: 1,
         },
       ],
@@ -306,19 +309,51 @@ export default {
       //tbc
     },
     goPage() {
+      this.loading = true;
       var paras = {
-        "seed":this.seed,
-        "sy_depth": this.sy_depth,
-        "sy_num_tree": this.num_tree,
-        "sy_num_goal": this.sy_num_goal,
-        "sy_num_plan": this.sy_num_plan,
-        "sy_num_var":this.sy_num_var,
-        "sy_num_action": this.sy_num_action,
-        "sy_num_selected":  this.sy_num_selected,
-        "sy_prob_leaf": this.sy_prob_leaf
-      }
-      console.log(paras)
-      this.$router.push({ path: "/tree" });
+        seed: this.seed,
+        sy_depth: this.sy_depth,
+        sy_num_tree: this.num_tree,
+        sy_num_goal: this.sy_num_goal,
+        sy_num_plan: this.sy_num_plan,
+        sy_num_var: this.sy_num_var,
+        sy_num_action: this.sy_num_action,
+        sy_num_selected: this.sy_num_selected,
+        sy_prob_leaf: this.sy_prob_leaf,
+      };
+      var that = this;
+      this.$http.post("/setPara", paras).then((res) => {
+        console.log(res);
+        if (res.status == 200) {
+          that.loading == false;
+          if ("msg" in res.data) {
+            this.$alert(res.data.msg, "Error", {
+              confirmButtonText: "Got it",
+              type: 'error',
+              callback: () => {
+                this.loading = false;
+              },
+            });
+          } else {
+            that.$router.push({
+              name: "tree",
+              params: {
+                data: res.data,
+                para: paras,
+                type: "2",
+              },
+            });
+          }
+        }
+      }).catch((error)=>{
+        this.$alert(error, "Error", {
+              confirmButtonText: "OK",
+              type: 'error',
+              callback: () => {
+                this.loading = false;
+              },
+            });
+      });
     },
   },
 };
@@ -333,12 +368,6 @@ export default {
   height: 100px;
 }
 
-.el-header {
-  height: 100px;
-  font-family: "Comic Sans MS Normal", "Comic Sans MS", sans-serif;
-  font-weight: 300;
-  font-size: 2em;
-}
 
 .el-aside {
   color: #333;

@@ -10,10 +10,10 @@
     <el-container>
       <el-container>
         <el-container>
-          <el-aside width="650px"></el-aside>
-          <el-main>
-            <div class="title">GenGPT-X</div>
-          </el-main>
+          <el-aside width="630px"></el-aside>
+            <div class="title">
+              <my-header></my-header>
+            </div>
         </el-container>
         <el-footer height="200px">
           <div class="right">
@@ -26,7 +26,7 @@
           </div>
           <div class="left">
             <div class="icon">
-              <i class="el-icon-s-grid"></i>
+              <font-awesome-icon icon="fa-solid fa-tree" />
             </div>
             <div class="btn">
               <el-button round @click="setPara()"
@@ -41,8 +41,12 @@
 </template>
 
 <script scoped>
+
+import MyHeader from '@/components/MyHeader.vue';
 export default {
+  
   name: "index-page",
+  components:{MyHeader},
   data() {
     return {};
   },
@@ -66,19 +70,15 @@ export default {
   color: #333;
   text-align: center;
   line-height: 350px;
+  height: 350px;
   background-image: url("@/assets/aside_index.png");
   background-repeat: no-repeat;
 }
 
-.el-main {
-  color: #333;
-  text-align: center;
-  line-height: 350px;
-}
 .title {
-  font-family: "Comic Sans MS Normal", "Comic Sans MS", sans-serif;
-  font-weight: 300;
+  margin-top: 60px;
   font-size: 3em;
+
 }
 body > .el-container {
   margin-bottom: 0px;

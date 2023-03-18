@@ -6,13 +6,13 @@ Vue.use(VueRouter)
 
 import index from '@/views/Index.vue'
 import Menu from '@/views/Menu.vue'
-import example from "@/views/Example.vue"
+import example from "@/views/ExamplePage.vue"
 import tree from "@/views/Tree.vue"
 import setPara from "@/views/SetPara.vue"
 const router = new VueRouter({
   routes: [
     {
-      path:'/index',
+      path:'/',
       name:'index',
       component:index
     },
