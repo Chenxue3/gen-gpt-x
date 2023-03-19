@@ -5,6 +5,7 @@
     <li v-for="(key, value) in des" :key="key">
       {{ key }} {{ paras[value] }}
     </li>
+    
   </div>
 </template>
   

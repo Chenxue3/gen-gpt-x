@@ -1,6 +1,6 @@
 Front-end:
 
-Vue、Router、Vuex、ElementUI、Axios（基于ajax）、Vue-tree-chart （D3.js）
+Vue、Router、Vuex、ElementUI、Axios（基于ajax）、Vue-tree-chart （D3.js）、vue-fullscreen
 
 Vue CLI: 交互式
 

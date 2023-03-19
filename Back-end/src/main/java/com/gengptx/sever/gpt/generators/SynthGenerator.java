@@ -206,9 +206,9 @@ public class SynthGenerator extends AbstractGenerator {
 	 * @return
 	 */
 	private GoalNode createGoal(int depth, ArrayList<Literal> as, ArrayList<Literal> ps, ArrayList<Literal> gcs){
-
+		int index = this.id +1;
 		// create the goal node
-		GoalNode goalNode = new GoalNode("T" + this.id + "-G" + this.treeGoalCount++);
+		GoalNode goalNode = new GoalNode("T" + index+ "-G" + this.treeGoalCount++);
 		// generate all plans to achieve this goal
 		ArrayList<PlanNode> plans = new ArrayList<>();
 		// clone the irrelevant literals, we assume the number of literals in potential is greater than or equals to
@@ -262,7 +262,8 @@ public class SynthGenerator extends AbstractGenerator {
 	 * @return the plan
 	 */
 	private PlanNode createPlan(int depth, ArrayList<Literal> as, ArrayList<Literal> prec, ArrayList<Literal> gcs){
-		PlanNode planNode = new PlanNode("T" + this.id + "-P" + this.treePlanCount++);
+		int idx = this.id+1;
+		PlanNode planNode = new PlanNode("T" + idx + "-P" + this.treePlanCount++);
 
 		// initialise the plan body
 		ArrayList<Node> planbody = new ArrayList<>();
@@ -292,7 +293,8 @@ public class SynthGenerator extends AbstractGenerator {
 			// if it is an action
 			if(types.get(i)){
 				// create the action
-				ActionNode actionNode = new ActionNode("T" + this.id + "-A" + this.treeActionCount++, steps.get(i).getPreC(),
+				int actionIndex = this.id+1;
+				ActionNode actionNode = new ActionNode("T" + actionIndex + "-A" + this.treeActionCount++, steps.get(i).getPreC(),
 						steps.get(i).getPostC());
 				// and add it to the plan body
 				planbody.add(actionNode);

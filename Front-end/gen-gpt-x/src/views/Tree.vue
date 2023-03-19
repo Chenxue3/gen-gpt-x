@@ -1,48 +1,30 @@
 <template>
   <div class="tree" v-loading="loading">
-    
     <div class="size-setting">
       <el-button @click="controlScale('bigger')">+</el-button>
       <el-button @click="controlScale('smaller')">-</el-button>
       <el-button @click="controlScale('restore')">1:1</el-button>
     </div>
-  
-    <div class="tree-control" v-if="this.isNormal">
+
+    <div class="tree-control" v-if="this.isNormal && !this.fullscreen">
       <el-button
-          icon="el-icon-arrow-left"
-          :disabled="treeIndex == 0"
-          @click="changeTree(-1)"
-        ></el-button>
-      Tree: {{ this.treeIndex+1 }} / {{this.$route.params.para["sy_num_tree"] }}
-        <el-button @click="changeTree(1)" :disabled="treeIndex == treeSize"
-          ><i class="el-icon-arrow-right el-icon--right"></i
-        ></el-button>
+        icon="el-icon-arrow-left"
+        :disabled="treeIndex == 0"
+        @click="changeTree(-1)"
+      ></el-button>
+      Goal-Plan Tree: {{ this.treeIndex + 1 }} /
+      {{ this.$route.params.para["sy_num_tree"] }}
+      <el-button @click="changeTree(1)" :disabled="treeIndex == treeSize"
+        ><i class="el-icon-arrow-right el-icon--right"></i
+      ></el-button>
     </div>
     <div class="tree-control" v-if="!this.isNormal">
-     <i v-if="this.isBlocksworld">Blocks World</i>
-     <i v-else>Craft World</i>
+      <i v-if="this.isBlocksworld">Blocks World</i>
+      <i v-else>Craft World</i>
     </div>
     <div class="intro">
       <el-popover placement="left" width="300" trigger="hover">
-        <div class="des">
-          Triangle
-          <img src="@/assets/img_action.png" alt="" width="50px" />
-          reprents ACTIONS.
-          <br />
-          Square
-          <img src="@/assets/img_plan.png" alt="" width="60px" />
-          reprents PLANS.
-          <br />
-          Circle
-          <img src="@/assets/img_goal.svg" alt="" width="50px" />
-          reprents GOALS.
-          <br />
-          <br />
-          <el-divider></el-divider>
-          <el-link type="primary" href="https://github.com/yvy714/GenGPT"
-            >Learn more about GenGPT-X</el-link
-          >
-        </div>
+        <intro-g-p-t></intro-g-p-t>
         <el-button
           slot="reference"
           icon="el-icon-question"
@@ -65,14 +47,29 @@
         <div class="paras">
           <show-paras :paras="this.$route.params.para"></show-paras>
         </div>
-        <el-button slot="reference" icon="el-icon-info" circle style="margin-bottom: 15px"></el-button>
+        <el-button
+          slot="reference"
+          icon="el-icon-info"
+          circle
+          style="margin-bottom: 15px"
+        ></el-button>
       </el-popover>
 
-      <el-popover placement="left" width="200" trigger="hover">
-        Back To Home Page:
-       <my-header></my-header>
-      <el-button slot="reference" icon="el-icon-s-home" circle  @click="backHome()"></el-button>
-      </el-popover>
+      <el-tooltip
+        effect="light"
+        placement="left"
+        content="Back To Home Page"
+        visible-arrow="false"
+      >
+        <el-button icon="el-icon-s-home" circle @click="backHome()" v-if="!this.fullscreen"></el-button>
+      </el-tooltip>
+    </div>
+    <div class="full-screen">
+      <el-button
+        :icon='fullscreen ? "el-icon-close": "el-icon-full-screen"'
+        circle
+        @click="setFull()"
+      ></el-button>
     </div>
     <vue-tree
       ref="scaleTree"
@@ -83,7 +80,6 @@
       :direction="this.direction"
       :currentScale="this.scale"
       class="main-tree"
-      
     >
       <template v-slot:node="{ node, collapsed }">
         <div
@@ -110,12 +106,15 @@
   <script>
 import VueTree from "@ssthouse/vue-tree-chart";
 import ShowParas from "@/components/ShowParas.vue";
-import MyHeader from '../components/MyHeader.vue';
+import IntroGPT from "../components/IntroGPT.vue";
+import { api as fullscreen } from "vue-fullscreen";
 export default {
-  components: { VueTree,ShowParas,MyHeader},
+  components: { VueTree, ShowParas, IntroGPT },
   name: "tree-page",
   data() {
     return {
+      fullscreen: false,
+      teleport: true,
       render: 0,
       treeIndex: 0,
       isBlocksworld: false,
@@ -123,10 +122,10 @@ export default {
       scale: 0.5,
       isCraftworld: false,
       isNormal: false,
-      loading : true,
+      loading: true,
       direction: "vertical",
       linkStyle: "straight",
-      wholeTree:{},
+      wholeTree: {},
       // this.direction="horizontal";
       treeData: {
         name: "none",
@@ -134,68 +133,107 @@ export default {
       treeConfig: { nodeWidth: 120, nodeHeight: 80, levelHeight: 200 },
     };
   },
-  created() {
-    console.log("get:" + this.$route.params.type);
-    this.wholeTree = this.$route.params.data;
-    //blocks world
-    if (this.$route.params.type == 0) {
-      this.treeConfig.nodeWidth = 200;
-      this.treeConfig.levelHeight = 200;
-      this.linkStyle = "curve";
-      this.treeData = this.$route.params.data;
-      this.isBlocksworld = true;
-      this.loading = false;
-    }
-    if (this.$route.params.type == 1) {
-      console.log("json:");
-      for (var i in this.$route.params.data) {
-        console.log(i);
-        this.treeSize = i;
-      }
-      this.treeData = this.$route.params.data[this.treeIndex];
 
-      this.isCraftworld = true;
-      this.loading = false;
-    }
-    if (this.$route.params.type == 2) {
-      this.isNormal = true;
-      this.paras = this.$route.params.para;
-      // this.treeData = this.$route.params.data;
-      console.log("json:");
-      for (var j in this.$route.params.data) {
-        this.$route.params.data[j];
-        this.treeSize = j;
-      }
-      this.treeData = this.$route.params.data[this.treeIndex];
-      this.loading = false;
-    }
+  created() {
+    window.addEventListener("wheel", this.handleScroll);
+    this.init();
+  },
+  beforeDestroy() {
+    window.removeEventListener("wheel", this.scrollFunc);
+    this.fullscreen = false;
   },
   methods: {
-    backHome(){
-      this.$route.push({
-          name:"index"
-        })
+    init() {
+      this.wholeTree = this.$route.params.data;
+      //blocks world
+      if (this.$route.params.type == 0) {
+        this.treeConfig.nodeWidth = 200;
+        this.treeConfig.levelHeight = 200;
+        this.linkStyle = "curve";
+        this.treeData = this.$route.params.data;
+        this.isBlocksworld = true;
+        this.loading = false;
+      }
+      if (this.$route.params.type == 1) {
+        console.log("json:");
+        for (var i in this.$route.params.data) {
+          console.log(i);
+          this.treeSize = i;
+        }
+        this.treeData = this.$route.params.data[this.treeIndex];
+
+        this.isCraftworld = true;
+        this.loading = false;
+      }
+      if (this.$route.params.type == 2) {
+        this.isNormal = true;
+        this.paras = this.$route.params.para;
+        // this.treeData = this.$route.params.data;
+        console.log("json:");
+        for (var j in this.$route.params.data) {
+          this.$route.params.data[j];
+          this.treeSize = j;
+        }
+        this.treeData = this.$route.params.data[this.treeIndex];
+        this.loading = false;
+      }
     },
-    changeTree(num){
+
+    /**
+     * when full screen, use can use mouse to control the size
+     * */
+    handleScroll(e) {
+      e = e || window.event;
+      if (e.wheelDelta) {
+        if (e.wheelDelta > 0 && this.fullscreen) {
+          this.controlScale('bigger')
+        }
+        if (e.wheelDelta < 0 && this.fullscreen) {
+          this.controlScale('smaller')
+        }
+      } else if (e.detail) {
+        if (e.detail < 0 && this.fullscreen) {
+          this.controlScale('bigger')
+        }
+        if (e.detail > 0 && this.fullscreen) {
+          this.controlScale('smaller')
+        }
+      }
+    },
+    async setFull() {
+      await fullscreen.toggle(this.$el.querySelector(".main-tree"), {
+        teleport: this.teleport,
+        callback: (isFullscreen) => {
+          this.fullscreen = isFullscreen;
+        },
+      });
+      this.fullscreen = fullscreen.isFullscreen;
+    },
+    backHome() {
+      this.$router.push({
+        name: "index",
+      });
+    },
+    changeTree(num) {
       this.loading = true;
-      this.treeIndex = this.treeIndex+num;
-      this.treeData = this.wholeTree[this.treeIndex]
-      console.log("tree size"+this.treeSize, "tree index"+this.treeIndex)
+      this.treeIndex = this.treeIndex + num;
+      this.treeData = this.wholeTree[this.treeIndex];
+      console.log("tree size" + this.treeSize, "tree index" + this.treeIndex);
       this.loading = false;
     },
     downloadxml() {
-      if(this.isNormal){
-      location.href = "http://localhost:8081/downloadxml";
+      if (this.isNormal) {
+        location.href = "http://localhost:8081/downloadxml";
       }
-      if(this.isBlocksworld){
+      if (this.isBlocksworld) {
         location.href = "http://localhost:8081/downloadBlocksWorldXML";
       }
     },
     downloadjson() {
-      if(this.isBlocksworld){
+      if (this.isBlocksworld) {
         location.href = "http://localhost:8081/downloadBlocksWorldJSON";
       }
-      if(this.isNormal){
+      if (this.isNormal) {
         location.href = "http://localhost:8081/downloadjson";
       }
     },
@@ -223,7 +261,7 @@ export default {
 </script>
   
   <style scoped>
-  .size-setting {
+.size-setting {
   position: fixed;
   left: 20px;
   top: 20px;
@@ -248,12 +286,17 @@ export default {
   font-family: "Comic Sans MS Normal", "Comic Sans MS", sans-serif;
   background-color: lightcyan;
 }
+.full-screen {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 999;
+}
 .tree {
   position: absolute;
   width: 100%;
   height: 100%;
   line-height: initial;
-  z-index: -999;
 }
 .tree-node {
   padding: 8px;

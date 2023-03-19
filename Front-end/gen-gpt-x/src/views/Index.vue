@@ -11,28 +11,27 @@
       <el-container>
         <el-container>
           <el-aside width="630px"></el-aside>
-            <div class="title">
-              <my-header></my-header>
-            </div>
+          <div class="title">GenGPT-X</div>
         </el-container>
         <el-footer height="200px">
           <div class="right">
             <div class="icon">
-              <i class="el-icon-s-opportunity"></i>
+              <i class="el-icon-s-opportunity" style="color:rgb(242, 192, 106)"></i>
             </div>
             <div class="btn">
               <el-button round @click="goPage()">Choose An Example</el-button>
             </div>
           </div>
           <div class="left">
-            <div class="icon">
-              <font-awesome-icon icon="fa-solid fa-tree" />
+            <div class="icon" style="color:rgb(134, 186, 61)">
+              <font-awesome-icon icon="fa-solid fa-tree"  />
             </div>
             <div class="btn">
               <el-button round @click="setPara()"
                 >Create An Abstrct GPT</el-button
               >
             </div>
+            <help-icon></help-icon>
           </div>
         </el-footer>
       </el-container>
@@ -41,12 +40,10 @@
 </template>
 
 <script scoped>
-
-import MyHeader from '@/components/MyHeader.vue';
+import HelpIcon from '@/components/HelpIcon.vue';
 export default {
-  
+  components: { HelpIcon },
   name: "index-page",
-  components:{MyHeader},
   data() {
     return {};
   },
@@ -77,8 +74,9 @@ export default {
 
 .title {
   margin-top: 60px;
-  font-size: 3em;
-
+  font-family: "Comic Sans MS Normal", "Comic Sans MS", sans-serif;
+  font-weight: 300;
+  font-size: 6em;
 }
 body > .el-container {
   margin-bottom: 0px;

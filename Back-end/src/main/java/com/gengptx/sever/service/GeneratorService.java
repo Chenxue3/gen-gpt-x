@@ -25,7 +25,6 @@ import java.util.Random;
 public class GeneratorService {
     public JSONObject generateGpt(HttpServletRequest request,int seed, int sy_depth, int num_tree, int sy_num_goal, int sy_num_plan, int sy_num_action, int sy_num_var,
                                   int sy_num_selected, double sy_prob_leaf) {
-
 //        check the value
         JSONObject jsonObject = new JSONObject();
         if(sy_depth <= 0) {
@@ -78,7 +77,6 @@ public class GeneratorService {
         // generate the tree
         ArrayList<GoalNode> goalForests = new ArrayList<>();
 
-        goalForests.add(gen.genTopLevelGoal(0));
         // write the set of goal plan tree to an XML file
         ArrayList<JSONObject> jsonForests = new ArrayList<>();
 
@@ -86,10 +84,6 @@ public class GeneratorService {
         for(Integer k = 0; k < num_tree; k++)
         {
             goalForests.add(gen.genTopLevelGoal(k));
-            JSONObject jsonItem = (JSONObject) JSONObject.toJSON(gen.genTopLevelGoal(k));
-            originalJSON.put("T"+k.toString(),jsonItem);
-            jsonItem = JSONConverter(jsonItem);
-            jsonObject.put(k.toString(),jsonItem);
         }
 
 
@@ -97,14 +91,24 @@ public class GeneratorService {
 //        save data into files
         String path = request.getServletContext().getRealPath("/files/");
         path = "D:/FYP/Development/out/";
+        //save XML file
+        XMLWriter wxf = new XMLWriter();
+        wxf.CreateXML(environment, goalForests, path+"xmlGPT.xml");
+
+        //convert json to target format
+        for (Integer i = 0; i < goalForests.size(); i++) {
+            JSONObject jsonItem = (JSONObject) JSONObject.toJSON(goalForests.get(i));
+            originalJSON.put("T"+i.toString(),jsonItem);
+            JSONObject jsonItemOut = JSONConverter(jsonItem);
+            jsonObject.put(i.toString(),jsonItemOut);
+        }
 
         //save json file
         String jsonString = originalJSON.toJSONString();
         saveDataToFile(path,"jsonGPT",jsonString);
 
-        //save XML file
-        XMLWriter wxf = new XMLWriter();
-        wxf.CreateXML(environment, goalForests, path+"xmlGPT.xml");
+
+
         return jsonObject;
 
     }
