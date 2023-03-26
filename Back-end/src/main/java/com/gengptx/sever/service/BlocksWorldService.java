@@ -20,23 +20,23 @@ public class BlocksWorldService {
         JSONArray plans = new JSONArray();
         //put goals in
         jsonObject.put("type", "G0");
-        jsonObject.put("name", "GoalMoveTo(x,y)");
+        jsonObject.put("name", "GoalMoveTo(X,Y)");
         jsonObject.put("attr", getImg("Goal"));
         JSONObject conds = new JSONObject();
-        conds.put("sub", "x = a, y = b");
-        conds.put("goal-condition", "on(x, y)");
+        conds.put("sub", "X = a, Y = b");
+        conds.put("goal-condition", "on(X, Y)");
         jsonObject.put("conds", conds.toJSONString());
 
         //generate plans
         //p0
         JSONObject p0 = new JSONObject();
         p0.put("type", "P0");
-        p0.put("name", "PlanKeepOn(x, y)");
+        p0.put("name", "PlanKeepOn(X, Y)");
         p0.put("attr", getImg("Plan"));
         JSONArray children_P0 = new JSONArray();
         JSONObject conds_P0 = new JSONObject();
-        conds_P0.put("sub", "x = a, y = b");
-        conds_P0.put("pre-condition", "on(x, y), y != table");
+        conds_P0.put("sub", "X = a, Y = b");
+        conds_P0.put("pre-condition", "on(X, Y), Y != table");
         p0.put("conds", conds_P0.toJSONString());
         //A0
         JSONObject A0 = new JSONObject();
@@ -54,12 +54,12 @@ public class BlocksWorldService {
         //p1
         JSONObject p1 = new JSONObject();
         p1.put("type", "P1");
-        p1.put("name", "PlanMoveToClear(x, y)");
+        p1.put("name", "PlanMoveToClear(X, Y)");
         p1.put("attr", getImg("Plan"));
         JSONArray children_P1 = new JSONArray();
         JSONObject conds_P1 = new JSONObject();
-        conds_P1.put("sub", "x = a, y = b");
-        conds_P1.put("pre-condition", "on(z, x), clear(y)");
+        conds_P1.put("sub", "X = a, Y = b");
+        conds_P1.put("pre-condition", "on(Z, X), clear(Y)");
         p1.put("conds", conds_P1.toJSONString());
 
         //G1
@@ -76,12 +76,12 @@ public class BlocksWorldService {
         //p2
         JSONObject p2 = new JSONObject();
         p2.put("type", "P2");
-        p2.put("name", "PlanClearMoveTo(x, y)");
+        p2.put("name", "PlanClearMoveTo(X, Y)");
         p2.put("attr", getImg("Plan"));
         JSONArray children_P2 = new JSONArray();
         JSONObject conds_P2 = new JSONObject();
-        conds_P2.put("sub", "x = a, y = b");
-        conds_P2.put("pre-condition", "on(z, y), clear(x)");
+        conds_P2.put("sub", "X = a, Y = b");
+        conds_P2.put("pre-condition", "on(Z, Y), clear(X)");
         p2.put("conds", conds_P2.toJSONString());
 
         //G3
@@ -97,21 +97,21 @@ public class BlocksWorldService {
         //p3
         JSONObject p3 = new JSONObject();
         p3.put("type", "P3");
-        p3.put("name", "PlanMoveTo(x, y)");
+        p3.put("name", "PlanMoveTo(X, Y)");
         p3.put("attr", getImg("Plan"));
         JSONArray children_P3 = new JSONArray();
         JSONObject conds_P3 = new JSONObject();
-        conds_P3.put("sub", "x = a, y = b");
-        conds_P3.put("pre-condition", "clear(x), clear(y)");
+        conds_P3.put("sub", "X = a, Y = b");
+        conds_P3.put("pre-condition", "clear(X), clear(Y)");
         p3.put("conds", conds_P3.toJSONString());
         //A1
         JSONObject A1 = new JSONObject();
-        A1.put("name", "ActionMove(x, y)");
+        A1.put("name", "ActionMove(X, Y)");
         A1.put("type", "A1");
         A1.put("attr", getImg("Action"));
         JSONObject conds_A1 = new JSONObject();
-        conds_A1.put("pre-condition", "clear(x), clear(y)");
-        conds_A1.put("post-condition", "on(x, y)");
+        conds_A1.put("pre-condition", "clear(X), clear(Y)");
+        conds_A1.put("post-condition", "on(X, Y)");
         A1.put("conds",conds_A1.toJSONString());
         children_P3.add(A1);
         //end of p3
@@ -122,12 +122,12 @@ public class BlocksWorldService {
         //p4
         JSONObject p4 = new JSONObject();
         p4.put("type", "P4");
-        p4.put("name", "PlanKeepOnTable(x, y)");
+        p4.put("name", "PlanKeepOnTable(X, Y)");
         p4.put("attr", getImg("Plan"));
         JSONArray children_P4 = new JSONArray();
         JSONObject conds_P4 = new JSONObject();
-        conds_P4.put("sub", "x = a, y = b");
-        conds_P4.put("pre-condition", "clear(x), y == table");
+        conds_P4.put("sub", "X = a, Y = b");
+        conds_P4.put("pre-condition", "clear(X), Y == table");
         p4.put("conds", conds_P4.toJSONString());
         //A2
         JSONObject A2 = new JSONObject();
@@ -175,11 +175,11 @@ public class BlocksWorldService {
     private JSONObject generateGoalTo(String name) {
         JSONObject G1 = new JSONObject();
         G1.put("type", name);
-        G1.put("name", "GoalMoveToTable(x)");
+        G1.put("name", "GoalMoveToTable(X)");
         G1.put("attr", getImg("Goal"));
         JSONObject conds_G1 = new JSONObject();
-        conds_G1.put("sub", "x = z");
-        conds_G1.put("goal-condition", "on(x, table)");
+        conds_G1.put("sub", "X = z");
+        conds_G1.put("goal-condition", "on(X, table)");
         G1.put("conds", conds_G1.toJSONString());
         return G1;
     }
@@ -187,11 +187,11 @@ public class BlocksWorldService {
     private JSONObject generateGoalToTable(String name) {
         JSONObject goal = new JSONObject();
         goal.put("type", name);
-        goal.put("name", "GoalMoveTo(x, y)");
+        goal.put("name", "GoalMoveTo(X, Y)");
         goal.put("attr", getImg("Goal"));
         JSONObject conds = new JSONObject();
-        conds.put("sub", "x = a, y = b");
-        conds.put("goal-condition", "on(x, y)");
+        conds.put("sub", "X = a, Y = b");
+        conds.put("goal-condition", "on(X, Y)");
         goal.put("conds", conds.toJSONString());
         return goal;
     }
