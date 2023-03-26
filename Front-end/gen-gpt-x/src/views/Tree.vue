@@ -18,9 +18,29 @@
         ><i class="el-icon-arrow-right el-icon--right"></i
       ></el-button>
     </div>
-    <div class="tree-control" v-if="!this.isNormal">
-      <i v-if="this.isBlocksworld">Blocks World</i>
-      <i v-else>Craft World</i>
+
+    <div class="tree-control" v-if="this.isCraftworld && !this.fullscreen">
+      <span v-if="this.treeIndex != 0" class="spanNext">
+        {{this.craftWorld[this.treeIndex-1].name }} 
+      </span>
+      <span v-else class="spanNext">no more~</span>
+      <el-button
+        icon="el-icon-arrow-left"
+        :disabled="treeIndex == 0"
+        @click="changeCraftTree(-1)"
+      ></el-button>
+      {{this.craftWorld[this.treeIndex].name }} 
+      <el-button @click="changeCraftTree(1)" :disabled="treeIndex == 9"
+        ><i class="el-icon-arrow-right el-icon--right"></i
+      ></el-button>
+      <span v-if="this.treeIndex != 9" class="spanNext">
+        {{this.craftWorld[this.treeIndex+1].name }} 
+      </span>
+      <span v-else class="spanNext">no more~</span>
+    </div>
+
+    <div class="tree-control" v-if="this.isBlocksworld && !this.fullscreen">
+      Block's World
     </div>
     <div class="intro">
       <el-popover placement="left" width="300" trigger="hover">
@@ -125,6 +145,7 @@ export default {
       loading: true,
       direction: "vertical",
       linkStyle: "straight",
+      craftWorld:[],
       wholeTree: {},
       // this.direction="horizontal";
       treeData: {
@@ -147,29 +168,30 @@ export default {
       this.wholeTree = this.$route.params.data;
       //blocks world
       if (this.$route.params.type == 0) {
-        this.treeConfig.nodeWidth = 200;
+        this.treeConfig.nodeWidth = 210;
         this.treeConfig.levelHeight = 200;
-        this.linkStyle = "curve";
         this.treeData = this.$route.params.data;
         this.isBlocksworld = true;
         this.loading = false;
       }
       if (this.$route.params.type == 1) {
-        console.log("json:");
-        for (var i in this.$route.params.data) {
-          console.log(i);
+        var craftData = this.$route.params.data;
+        for (var i in craftData) {
+          this.craftWorld.push(craftData[i]);
           this.treeSize = i;
         }
-        this.treeData = this.$route.params.data[this.treeIndex];
-
+        this.treeConfig.nodeWidth = 180;
+        this.treeConfig.levelHeight = 200;
+        this.treeIndex = 0;
+        this.treeData = this.craftWorld[0];
         this.isCraftworld = true;
         this.loading = false;
+        // console.log(this.craftWorld)
       }
       if (this.$route.params.type == 2) {
         this.isNormal = true;
         this.paras = this.$route.params.para;
         // this.treeData = this.$route.params.data;
-        console.log("json:");
         for (var j in this.$route.params.data) {
           this.$route.params.data[j];
           this.treeSize = j;
@@ -218,8 +240,12 @@ export default {
       this.loading = true;
       this.treeIndex = this.treeIndex + num;
       this.treeData = this.wholeTree[this.treeIndex];
-      console.log("tree size" + this.treeSize, "tree index" + this.treeIndex);
       this.loading = false;
+    },
+    changeCraftTree(num){
+      this.treeIndex = this.treeIndex + num;
+      // console.log(this.craftWorld[this.treeIndex])
+      this.treeData = this.craftWorld[this.treeIndex]
     },
     downloadxml() {
       if (this.isNormal) {
@@ -228,6 +254,9 @@ export default {
       if (this.isBlocksworld) {
         location.href = "http://localhost:8081/downloadBlocksWorldXML";
       }
+      if(this.isCraftworld){
+        location.href = "http://localhost:8081/downloadCraftWorldXML";
+      }
     },
     downloadjson() {
       if (this.isBlocksworld) {
@@ -235,6 +264,9 @@ export default {
       }
       if (this.isNormal) {
         location.href = "http://localhost:8081/downloadjson";
+      }
+      if(this.isCraftworld){
+        location.href = "http://localhost:8081/downloadCraftWorldXML";
       }
     },
     controlScale(command) {
@@ -278,13 +310,17 @@ export default {
   flex-direction: column;
 }
 .tree-control {
+  font-size: large;
   position: fixed;
   right: 50%;
   transform: translateX(50%);
   top: 20px;
   z-index: 999;
   font-family: "Comic Sans MS Normal", "Comic Sans MS", sans-serif;
-  background-color: lightcyan;
+}
+.spanNext{
+  font-size: smaller;
+  color: gainsboro;
 }
 .full-screen {
   position: fixed;

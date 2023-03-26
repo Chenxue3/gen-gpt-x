@@ -30,43 +30,14 @@ export default {
   methods: {
     goPage(type) {
       this.loading = true;
-
+      var add;
       if (type == 0) {
-        var add = "/getBlocksWorld";
-        this.getData(add, type);
+        add = "/getBlocksWorld";
+        
       } else {
-        this.$router
-          .push({
-            name: "tree",
-            params: {
-              data: {
-                0: {
-                  name: "0",
-                  children: [
-                    {
-                      1: {
-                        name: "1",
-                      },
-                      2: {
-                        name: "2",
-                      },
-                    },
-                  ],
-                },
-                1: {
-                  name: "1",
-                },
-                2: {
-                  name: "2",
-                },
-              },
-              type: type,
-            },
-          })
-          .then(() => {
-            return;
-          });
+         add ="/getCraftWorld";
       }
+      this.getData(add, type);
     },
     getData(add, type) {
       var that = this;
