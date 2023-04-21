@@ -11,13 +11,13 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 /* import specific icons */
-import { faTree,faCube,faHammer,faSliders,faHandshakeAngle,faBook } from '@fortawesome/free-solid-svg-icons'
+import { faTree,faCube,faHammer,faSliders,faHandshakeAngle,faBook,faWandMagicSparkles } from '@fortawesome/free-solid-svg-icons'
 
 // import element-ui
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 /* add icons to the library */
-library.add(faTree,faCube,faHammer,faSliders,faHandshakeAngle,faBook)
+library.add(faTree,faCube,faHammer,faSliders,faHandshakeAngle,faBook,faWandMagicSparkles)
 
 /* add font awesome icon component */
 Vue.component('font-awesome-icon', FontAwesomeIcon)

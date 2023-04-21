@@ -14,7 +14,7 @@ import java.io.*;
  */
 
 public class BlocksWorldService {
-    public JSONObject returnBlocksWorld(HttpServletRequest request) {
+    public JSONObject returnBlocksWorld() {
 
         JSONObject jsonObject = new JSONObject();
         JSONArray plans = new JSONArray();
@@ -145,9 +145,7 @@ public class BlocksWorldService {
 
         jsonObject.put("children",plans);
         String jsonString = jsonObject.toJSONString();
-        String path = request.getServletContext().getRealPath("/files/");
-        path = "D:/FYP/Development/out/";
-        saveDataToFile(path,"BlocksWorldJSON",jsonString);
+        saveDataToFile("BlocksWorldJSON",jsonString);
         return jsonObject;
 
     }
@@ -202,9 +200,9 @@ public class BlocksWorldService {
      * @param fileName
      * @param data
      */
-    private static void saveDataToFile(String path, String fileName, String data) {
+    private static void saveDataToFile(String fileName, String data) {
         BufferedWriter writer = null;
-        File file = new File( path+fileName + ".json");
+        File file = new File( fileName + ".json");
         //if the file nor exits, create a new one
         if (!file.exists()) {
             try {
@@ -228,6 +226,6 @@ public class BlocksWorldService {
                 e.printStackTrace();
             }
         }
-        System.out.println("json file store in "+path+ fileName+" success!");
+        System.out.println("json file store in "+fileName+" success!");
     }
 }

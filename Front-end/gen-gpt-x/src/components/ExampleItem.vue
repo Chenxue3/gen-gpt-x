@@ -1,8 +1,10 @@
 <template>
   <div class="item">
+    <!-- show the icon -->
     <div class="icon">
       <font-awesome-icon :icon="example.icon" />
     </div>
+    <!-- show the title and description -->
     <div class="left">
       <div class="title">
         {{ example.title }}
@@ -28,6 +30,7 @@ export default {
   },
 
   methods: {
+    // go to the tree page
     goPage(type) {
       this.loading = true;
       var add;
@@ -39,6 +42,7 @@ export default {
       }
       this.getData(add, type);
     },
+    // get the data from the server
     getData(add, type) {
       var that = this;
       this.$http

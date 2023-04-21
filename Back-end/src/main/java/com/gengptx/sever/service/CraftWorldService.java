@@ -2,8 +2,8 @@ package com.gengptx.sever.service;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.gengptx.sever.gpt.structure.GoalNode;
 
+import java.io.*;
 import java.util.ArrayList;
 
 /**
@@ -41,6 +41,9 @@ public class CraftWorldService {
 
         jsonObject.put("createGold",createGettingNode("Gold","Bridge"));
         jsonObject.put("createGem",createGettingNode("Gem","Axe"));
+
+        String jsonString = jsonObject.toJSONString();
+        saveDataToFile("craftworld.json",jsonString);
         return  jsonObject;
     }
 
@@ -308,4 +311,38 @@ public class CraftWorldService {
         return "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQpRGYLJ76M2rHNLQdI_r-U4Z5iDv1Jx-ljeQ&usqp=CAU";
     }
 
+    /**
+     * add json data into the file
+     *
+     * @param fileName
+     * @param data
+     */
+    private static void saveDataToFile(String fileName, String data) {
+        BufferedWriter writer = null;
+        File file = new File( fileName);
+        //if the file nor exits, create a new one
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        //write in
+        try {
+            writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, false), "UTF-8"));
+            writer.write(data);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (writer != null) {
+                    writer.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        System.out.println("json file store in "+fileName+" success!");
+    }
 }

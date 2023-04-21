@@ -17,6 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin
 public class CraftWorldController {
 
+    /**
+     * get the GPT of craft world
+     * @return generated GPT in json format of Blocks world
+     */
     @GetMapping("/getCraftWorld")
     public JSONObject getCraftWorld(){
         CraftWorldService craftWorldService = new CraftWorldService();

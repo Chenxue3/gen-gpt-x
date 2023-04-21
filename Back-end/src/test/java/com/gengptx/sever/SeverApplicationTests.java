@@ -8,6 +8,13 @@ class SeverApplicationTests {
 
 	@Test
 	void contextLoads() {
+
+	}
+
+	//a Junit test to test ServerApplication
+	@Test
+	public void testServerApplication() {
+		SeverApplication.main(new String[] {});
 	}
 
 }

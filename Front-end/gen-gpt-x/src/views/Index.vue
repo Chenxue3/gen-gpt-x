@@ -1,5 +1,5 @@
 <!-- 
- * @description: 
+ * @description: index page
  * @fileName: index.vue 
  * @author: cxs 
  * @date: 2022-10-24 11:16:13
@@ -10,6 +10,7 @@
     <el-container>
       <el-container>
         <el-container>
+          <!-- title -->
           <el-aside width="630px"></el-aside>
           <div class="title">GenGPT-X</div>
         </el-container>
@@ -18,17 +19,28 @@
             <div class="icon">
               <i class="el-icon-s-opportunity" style="color:rgb(242, 192, 106)"></i>
             </div>
+            <!-- go to real-life examples page -->
             <div class="btn">
-              <el-button round @click="goPage()">Choose An Example</el-button>
+              <el-button round @click="goPage()">Create GPT Based on Real Examples</el-button>
+            </div>
+          </div>
+           <div class="right">
+            <!-- go generation page by GenGPT-X -->
+            <div class="icon">
+              <font-awesome-icon icon="fa-solid fa-wand-magic-sparkles" />
+            </div>
+            <div class="btn">
+              <el-button round @click="setPara(0)">Create Abstract GPTs by GenGPT-X</el-button>
             </div>
           </div>
           <div class="left">
             <div class="icon" style="color:rgb(134, 186, 61)">
               <font-awesome-icon icon="fa-solid fa-tree"  />
             </div>
+            
             <div class="btn">
-              <el-button round @click="setPara()"
-                >Create An Abstrct GPT</el-button
+              <el-button round @click="setPara(1)"
+                >Create Abstrct GPTs by GenGPT</el-button
               >
             </div>
             <help-icon></help-icon>
@@ -48,8 +60,13 @@ export default {
     return {};
   },
   methods: {
-    setPara() {
-      this.$router.push({ path: "/setPara" });
+    setPara(type) {
+      this.$router.push({
+              name: "setPara",
+              params: {
+                type: type,
+              },
+            });
     },
     goPage() {
       this.$router.push({ path: "/example" });

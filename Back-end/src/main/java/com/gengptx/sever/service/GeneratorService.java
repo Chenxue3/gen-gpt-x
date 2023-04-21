@@ -1,19 +1,17 @@
 package com.gengptx.sever.service;
 
 import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
-import com.gengptx.sever.gpt.generators.GPTGenerator;
-import com.gengptx.sever.gpt.generators.SynthGenerator;
-import com.gengptx.sever.gpt.generators.XMLWriter;
-import com.gengptx.sever.gpt.structure.GoalNode;
-import com.gengptx.sever.gpt.structure.Literal;
+import com.gengptx.sever.gengpt.generators.GPTGenerator;
+import com.gengptx.sever.gengpt.generators.SynthGenerator;
+import com.gengptx.sever.gengpt.generators.XMLWriter;
+import com.gengptx.sever.gengpt.structure.GoalNode;
+import com.gengptx.sever.gengpt.structure.Literal;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Random;
 
 /**
  * @author ：xueshanChen
@@ -64,6 +62,9 @@ public class GeneratorService {
            jsonObject.put("msg","Total number of goal-plan tree must be greater than 0");
             return jsonObject;
         }
+        if(sy_num_action - 2 < 0){
+            jsonObject.put("msg", "The number of actions must be greater than 2");
+        }
 
 
 
@@ -90,10 +91,10 @@ public class GeneratorService {
 
 //        save data into files
         String path = request.getServletContext().getRealPath("/files/");
-        path = "D:/FYP/Development/out/";
+        path = "";
         //save XML file
         XMLWriter wxf = new XMLWriter();
-        wxf.CreateXML(environment, goalForests, path+"xmlGPT.xml");
+        wxf.CreateXML(environment, goalForests, "xmlGPT.xml");
 
         //convert json to target format
         for (Integer i = 0; i < goalForests.size(); i++) {
@@ -105,7 +106,7 @@ public class GeneratorService {
 
         //save json file
         String jsonString = originalJSON.toJSONString();
-        saveDataToFile(path,"jsonGPT",jsonString);
+        saveDataToFile("jsonGPT",jsonString);
 
 
 
@@ -227,12 +228,11 @@ public class GeneratorService {
     /**
      * add json data into the file
      *
-     * @param fileName
-     * @param data
+     * @param data the data need to be writen in
      */
-    private static void saveDataToFile(String path, String fileName, String data) {
+    private static void saveDataToFile(String fileName, String data) {
         BufferedWriter writer = null;
-        File file = new File( path+fileName + ".json");
+        File file = new File(fileName + ".json");
         //if the file nor exits, create a new one
         if (!file.exists()) {
             try {
@@ -256,7 +256,7 @@ public class GeneratorService {
                 e.printStackTrace();
             }
         }
-        System.out.println("json file store in "+path+ fileName+" success!");
+        System.out.println("file store in "+fileName+" success!");
     }
 
 

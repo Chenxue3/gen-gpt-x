@@ -1,5 +1,6 @@
 <template>
     <div class="des">
+        <el-divider></el-divider>
         In the upper left corner, you can control the size of the goal-plan-tree. 
         <el-divider></el-divider>
         Click <span class="underline">nodes with the green dotted border</span> to collapse the corresponding child nodes. 

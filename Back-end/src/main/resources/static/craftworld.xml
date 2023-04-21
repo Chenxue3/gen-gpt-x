@@ -1,0 +1,287 @@
+<!-- 
+    at(M, x,y) -> M at position (x,y) -> x1==x2 , y1==y2
+    have(M) -> agent have M already
+ -->
+
+
+<craft-world>
+    <!--  agent's position (x1, y1), target position (x2,y2). goal: agent move to (x2,y2) -->
+    <goaltemp type="fromTo(x1,y1,x2,y2)" goal-condition="x1==x2 , y1==y2">
+        <!-- end condition: the agent arrive the destination -->
+        <plan type="noMove" pre-condition="x1==x2 , y1==y2">
+            <action type="ActionDummy" pre-condition=""></action>
+        </plan>
+        <!-- plan: go right if destination is to the right of agent -->
+        <plan type=" toRight" pre-condition='x2 > x1'>
+            <!-- action: go right -->
+            <action type="agentMoveToRight" pre-condition="x2 > x1"
+                post-condition="x1==x2"></action>
+            <!-- loop -->
+            <goaltemp type="fromTo(x1,y1,x2,y2)" goal-condition="x1==x2 , y1==y2" />
+        </plan>
+        <!-- go left -->
+        <plan type=" toLeft" pre-condition="x1 > x2">
+            <action type="agentMoveToLeft" pre-condition="x1 > x2"
+                post-condition="x1==x2"></action>
+            <goaltemp type="fromTo(x1,y1,x2,y2)" goal-condition="x1==x2 , y1==y2" />
+        </plan>
+        <!-- go up -->
+        <plan type=" toUp" pre-condition="y2>y1">
+            <action type="agentMoveUp" pre-condition="y2>y1" post-condition="y1==y2"></action>
+            <goaltemp type="fromTo(x1,y1,x2,y2)" goal-condition="x1==x2 , y1==y2" />
+        </plan>
+        <!-- go down -->
+        <plan type=" toDown" pre-condition="y1>y2">
+            <action type="agentMoveDown" pre-condition="y1>y2"
+                post-condition="y1==y2"></action>
+            <goaltemp type="fromTo(x1,y1,x2,y2)" goal-condition="x1==x2 , y1==y2" />
+        </plan>
+    </goaltemp>
+
+    <!-- Process Tools -->
+    <!-- create Plank, resources: Wood, location: Toolshed -->
+    <goal
+        name="createPlank" goal-condition="have(plank)">
+        <!-- plan: already have Plank -->
+        <plan name="noAction" pre-condition="have(plank)">
+            <action name="ActionDummy" pre-condition="" post-condition=""></action>
+        </plan>
+
+        <!-- plan: get Wood -->
+        <plan name="getWood" pre-condition="!have(wood), at(agent,a,b), at(wood, c, d)">
+            <goaltemp type="fromTo(x1,y1,x2,y2)" goal-condition="x1==x2 , y1==y2"
+                sub="x1=a,y1=b,x2=c,y2=d" />
+            <action name="pickUpWood"
+                pre-condition="!have(wood), at(agent, a, b), at(wood, c, d),a==c,b==d"
+                post-condition="have(wood)" />
+            <goal name="createPlank" goal-condition="have(plank)" />
+        </plan>
+
+        <!-- plan: process Wood into Plank at toolshed-->
+        <plan name="processPlank" pre-condition="have(wood), at(agent,a,b), at(toolshed, c, d)">
+            <goaltemp type="fromTo(x1,y1,x2,y2)" goal-condition="x1==x2 , y1==y2"
+                sub="x1=a,y1=b,x2=c,y2=d" />
+            <action name="processPlank"
+                pre-condition="have(wood), at(agent,a,b), at(toolshed, c, d), a==c, b==d"
+                post-condition="have(plank)"></action>
+        </plan>
+    </goal>
+
+
+    <!-- create Rope, resources: Grass, location: Toolshed -->
+    <goal name="createRope" goal-condition="have(rope)">
+        <!-- plan: already have Rope -->
+        <plan name="PlanDummy" pre-condition="have(rope)">
+            <action name="ActionDummy" pre-condition="" post-condition=""></action>
+        </plan>
+
+        <!-- plan: get Grass -->
+        <plan name="getGrass" pre-condition="!have(grass), at(agent,a,b), at(grass, c, d)">
+            <goaltemp type="fromTo(x1,y1,x2,y2)" goal-condition="x1==x2 , y1==y2"
+                sub="x1=a,y1=b,x2=c,y2=d" />
+            <action name="pickUpGrass"
+                pre-condition="!have(grass), at(agent, a, b), at(grass, c, d),a==c,b==d"
+                post-condition="have(grass)" />
+            <goal name="createRope" goal-condition="have(rope)" />
+        </plan>
+
+        <!-- plan: process Grass into Rope at toolshed-->
+        <plan name="processRope" pre-condition="have(grass), at(agent,a,b), at(toolshed, c, d)">
+            <goaltemp type="fromTo(x1,y1,x2,y2)" goal-condition="x1==x2 , y1==y2"
+                sub="x1=a,y1=b,x2=c,y2=d" />
+            <action name="processRope"
+                pre-condition="have(grass), at(agent,a,b), at(toolshed, c, d), a==c, b==d"
+                post-condition="have(rope)"></action>
+        </plan>
+    </goal>
+
+    <!-- create Stick, resources: Wood, location: Workbench -->
+    <goal
+        name="createStick" goal-condition="have(stick)">
+        <!-- plan: already have Stick -->
+        <plan name="noAction" pre-condition="have(stick)">
+            <action name="ActionDummy" pre-condition="" post-condition=""></action>
+        </plan>
+
+        <!-- plan: get Wood -->
+        <plan name="getWood" pre-condition="!have(wood), at(agent,a,b), at(wood, c, d)">
+            <goaltemp type="fromTo(x1,y1,x2,y2)" goal-condition="x1==x2 , y1==y2"
+                sub="x1=a,y1=b,x2=c,y2=d" />
+            <action name="pickUpWood"
+                pre-condition="!have(wood), at(agent, a, b), at(wood, c, d),a==c,b==d"
+                post-condition="have(wood)" />
+            <goal name="createStick" goal-condition="have(stick)" />
+        </plan>
+
+        <!-- plan: process Wood into Stick at workbench-->
+        <plan name="processStick" pre-condition="have(wood), at(agent,a,b), at(workbench, c, d)">
+            <goaltemp type="fromTo(x1,y1,x2,y2)" goal-condition="x1==x2 , y1==y2"
+                sub="x1=a,y1=b,x2=c,y2=d" />
+            <action name="processStick"
+                pre-condition="have(wood), at(agent,a,b), at(workbench, c, d), a==c, b==d"
+                post-condition="have(stick)"></action>
+        </plan>
+    </goal>
+
+
+    <!-- Goals -->
+
+
+    <!-- Create Axe, which requires resources Iron and Stick, and is processed at Toolshed -->
+    <goal
+        name="createAxe" goal-condition="have(axe)">
+        <!-- Plan 0: if the agent has Axe, do nothing -->
+        <plan name="planDummy" pre-condition="have(axe)">
+            <action name="ActionDummy" pre-condition="" post-condition=""></action>
+        </plan>
+        <!-- Plan 1: if the agent doesn't have Iron, then get Iron -->
+        <plan name="getIron" pre-condition="!have(iron), at(agent, a, b), at(iron, c, d)">
+            <goaltemp type="fromTo(x1,y1,x2,y2)" goal-condition="x1==x2 , y1==y2"
+                sub="x1=a,y1=b,x2=c,y2=d" />
+            <action name="pickUpIron"
+                pre-condition="!have(iron), at(agent, a, b), at(iron, c, d),a==c,b==d"
+                post-condition="have(iron)" />
+            <goal name="createAxe" goal-condition="have(axe)" />
+        </plan>
+        <!-- Plan 2: if the agent doesn't have Stick, then get Stick -->
+        <plan name="getStick" pre-condition="!have(stick),at(agent,a,b), at(stick,c,d)">
+            <goal name="createStick" goal-condition="have(stick)" />
+            <goal name="createAxe" goal-condition="have(axe)" />
+        </plan>
+        <!-- Plan 3: process Axe -->
+        <plan name="processAxe"
+            pre-condition="have(iron), have(stick),at(agent,a,b), at(toolshed,c,d)">
+            <goaltemp type="fromTo(x1,y1,x2,y2)" goal-condition="x1==x2 , y1==y2"
+                sub="x1=a,y1=b,x2=c,y2=d" />
+            <action name="processAxe"
+                pre-condition="have(iron), have(stick),at(agent,a,b), at(toolshed,c,d), x1==x2, y1==y2"
+                post-condition="have(axe)"></action>
+        </plan>
+    </goal>
+
+    <!-- Create Bed, which requires resources Grass and Plank, and is processed at Workbench -->
+    <goal
+        name="createBed" goal-condition="have(bed)">
+        <!-- Plan 0: if the agent has Bed, do nothing -->
+        <plan name="planDummy" pre-condition="have(bed)">
+            <action name="ActionDummy" pre-condition="" post-condition=""></action>
+        </plan>
+        <!-- Plan 1: if the agent doesn't have Grass, then get Grass -->
+        <plan name="getGrass" pre-condition="!have(grass), at(agent, a, b), at(grass, c, d)">
+            <goaltemp type="fromTo(x1,y1,x2,y2)" goal-condition="x1==x2 , y1==y2"
+                sub="x1=a,y1=b,x2=c,y2=d" />
+            <action name="pickUpGrass"
+                pre-condition="!have(grass), at(agent, a, b), at(grass, c, d),a==c,b==d"
+                post-condition="have(grass)" />
+            <goal name="createBed" goal-condition="have(bed)" />
+        </plan>
+        <!-- Plan 2: if the agent doesn't have Plank, then get Plank -->
+        <plan name="getPlank" pre-condition="!have(plank),at(agent,a,b), at(plank,c,d)">
+            <goal name="createPlank" goal-condition="have(plank)" />
+            <goal name="createBed" goal-condition="have(bed)" />
+        </plan>
+        <!-- Plan 3: process Bed -->
+        <plan name="processBed"
+            pre-condition="have(grass), have(plank),at(agent,a,b), at(workbench,c,d)">
+            <goaltemp type="fromTo(x1,y1,x2,y2)" goal-condition="x1==x2 , y1==y2"
+                sub="x1=a,y1=b,x2=c,y2=d" />
+            <action name="processBed"
+                pre-condition="have(grass), have(plank),at(agent,a,b), at(workbench,c,d), x1==x2, y1==y2"
+                post-condition="have(bed)"></action>
+        </plan>
+    </goal>
+
+    <!-- Create Bridge, which requires resources Wood and Iron, and is processed at Factory -->
+    <goal
+        name="createBridge" goal-condition="have(bridge)">
+        <!-- Plan 0: if the agent has Bridge, do nothing -->
+        <plan name="planDummy" pre-condition="have(bridge)">
+            <action name="ActionDummy" pre-condition="" post-condition=""></action>
+        </plan>
+        <!-- Plan 1: if the agent doesn't have Wood, then get Wood -->
+        <plan name="getWood" pre-condition="!have(wood), at(agent, a, b), at(wood, c, d)">
+            <goaltemp type="fromTo(x1,y1,x2,y2)" goal-condition="x1==x2 , y1==y2"
+                sub="x1=a,y1=b,x2=c,y2=d" />
+            <action name="pickUpWood"
+                pre-condition="!have(wood), at(agent, a, b), at(wood, c, d), a==c, b==d"
+                post-condition="have(wood)" />
+            <goal name="createBridge" goal-condition="have(bridge)" />
+        </plan>
+        <!-- Plan 2: if the agent doesn't have Iron, then get Iron -->
+        <plan name="getIron" pre-condition="!have(iron), at(agent, a, b), at(iron, c, d)">
+            <goaltemp type="fromTo(x1,y1,x2,y2)" goal-condition="x1==x2 , y1==y2"
+                sub="x1=a,y1=b,x2=c,y2=d" />
+            <action name="pickUpIron"
+                pre-condition="!have(iron), at(agent, a, b), at(iron, c, d),a==c,b==d"
+                post-condition="have(iron)" />
+            <goal name="createBridge" goal-condition="have(bridge)" />
+        </plan>
+        <!-- Plan 3: process Bridge -->
+        <plan name="processBridge"
+            pre-condition="have(wood), have(iron),at(agent,a,b), at(factory,c,d)">
+            <goaltemp type="fromTo(x1,y1,x2,y2)" goal-condition="x1==x2 , y1==y2"
+                sub="x1=a,y1=b,x2=c,y2=d" />
+            <action name="processBridge"
+                pre-condition="have(wood), have(iron),at(agent,a,b), at(factory,c,d), x1==x2, y1==y2"
+                post-condition="have(bridge)"></action>
+        </plan>
+    </goal>
+    <!-- Create Cloth, which requires resources Grass, and is processed at Factory -->
+    <goal
+        name="createCloth" goal-condition="have(cloth)">
+        <!-- Plan 0: if the agent has Cloth, do nothing -->
+        <plan name="planDummy" pre-condition="have(cloth)">
+            <action name="ActionDummy" pre-condition="" post-condition=""></action>
+        </plan>
+        <!-- Plan 1: if the agent doesn't have Grass, then get Grass -->
+        <plan name="getGrass" pre-condition="!have(grass), at(agent, a, b), at(grass, c, d)">
+            <goaltemp type="fromTo(x1,y1,x2,y2)" goal-condition="x1==x2 , y1==y2"
+                sub="x1=a,y1=b,x2=c,y2=d" />
+            <action name="pickUpGrass"
+                pre-condition="!have(grass), at(agent, a, b), at(grass, c, d),a==c,b==d"
+                post-condition="have(grass)" />
+            <goal name="createCloth" goal-condition="have(cloth)" />
+        </plan>
+        <!-- Plan 3: process Cloth -->
+        <plan name="processCloth"
+            pre-condition="have(grass),,at(agent,a,b), at(factory,c,d)">
+            <goaltemp type="fromTo(x1,y1,x2,y2)" goal-condition="x1==x2 , y1==y2"
+                sub="x1=a,y1=b,x2=c,y2=d" />
+            <action name="processCloth"
+                pre-condition="have(grass),,at(agent,a,b), at(factory,c,d), x1==x2, y1==y2"
+                post-condition="have(cloth)"></action>
+        </plan>
+    </goal>
+
+
+    <!-- Create Gem, Tools: Axe -->
+    <goal
+        name="createGem" goal-condition="have(gem)">
+        <plan name="have(gem)" pre-condition="have(gem)">
+            <!-- Placeholder action -->
+            <action name="ActionDummy" pre-condition="" post-condition=""></action>
+        </plan>
+        <plan name="get(axe)" pre-condition="!have(axe)">
+            <goal name="createAxe" goal-condition="have(axe)" />
+            <goal name="createGem" goal-condition="have(gem)" />
+        </plan>
+        <plan name="findGem" pre-condition="have(axe)">
+            <action name="processGem" pre-condition="have(axe)" post-condition="have(gem)"></action>
+        </plan>
+    </goal>
+    <!-- Create Gold, Tools: Bridge -->
+    <goal
+        name="createGold" goal-condition="have(gold)">
+        <plan name="have(gold)" pre-condition="have(gold)">
+            <!-- Placeholder action -->
+            <action name="ActionDummy" pre-condition="" post-condition=""></action>
+        </plan>
+        <plan name="get(bridge)" pre-condition="!have(bridge)">
+            <goal name="createBridge" goal-condition="have(bridge)" />
+            <goal name="createGold" goal-condition="have(gold)" />
+        </plan>
+        <plan name="findGold" pre-condition="have(bridge)">
+            <action name="processGold" pre-condition="have(bridge)" post-condition="have(gold)"></action>
+        </plan>
+    </goal>
+</craft-world>

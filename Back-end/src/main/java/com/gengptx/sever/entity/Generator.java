@@ -8,15 +8,23 @@ package com.gengptx.sever.entity;
  */
 
 public class Generator {
+//    number of seed
     private int seed;
-    //Synth parameters with their default values
+//    max depth of the GPT
     private int sy_depth;
+//    number of trees
     private int sy_num_tree;
+//    number of goals in each plan
     private int sy_num_goal;
+//    number of plans for each goal
     private int sy_num_plan;
+//    number of actions
     private int sy_num_action;
+//    number of variables
     private int sy_num_var;
+//    number of selected variables
     private int sy_num_selected;
+//    probability of a node becomes a leaf node
     private double sy_prob_leaf;
 
     public int getSeed() {
@@ -91,18 +99,5 @@ public class Generator {
         this.sy_prob_leaf = sy_prob_leaf;
     }
 
-    @Override
-    public String toString() {
-        return "Parameter{" +
-                "seed=" + seed +
-                ", sy_depth=" + sy_depth +
-                ", sy_num_tree=" + sy_num_tree +
-                ", sy_num_goal=" + sy_num_goal +
-                ", sy_num_plan=" + sy_num_plan +
-                ", sy_num_action=" + sy_num_action +
-                ", sy_num_var=" + sy_num_var +
-                ", sy_num_selected=" + sy_num_selected +
-                ", sy_prob_leaf=" + sy_prob_leaf +
-                '}';
-    }
+
 }

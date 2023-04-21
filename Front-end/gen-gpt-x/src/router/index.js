@@ -5,8 +5,7 @@ Vue.use(VueRouter)
 // import views
 
 import index from '@/views/Index.vue'
-import Menu from '@/views/Menu.vue'
-import example from "@/views/ExamplePage.vue"
+import example from "@/views/ChooseExample.vue"
 import tree from "@/views/Tree.vue"
 import setPara from "@/views/SetPara.vue"
 const router = new VueRouter({
@@ -15,11 +14,6 @@ const router = new VueRouter({
       path:'/',
       name:'index',
       component:index
-    },
-    {
-      path: '/menu',
-      name:"menu",
-      component: Menu
     },
     {
       path: '/example',

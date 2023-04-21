@@ -1,5 +1,6 @@
 <template>
     <div>
+      <!-- header -->
       <el-link href="/index" class="header">GenGPT-X</el-link>
     </div>
     

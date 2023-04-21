@@ -2,17 +2,10 @@ package com.gengptx.sever.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.gengptx.sever.entity.Generator;
-import com.gengptx.sever.gpt.generators.GPTGenerator;
-import com.gengptx.sever.gpt.generators.SynthGenerator;
-import com.gengptx.sever.gpt.structure.GoalNode;
-import com.gengptx.sever.gpt.structure.Literal;
 import com.gengptx.sever.service.GeneratorService;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * @author ：xueshanChen
@@ -23,7 +16,11 @@ import java.util.HashMap;
 
 @RestController
 public class GeneratorController {
-
+    /**
+     *
+     * @param generator require a set of parameters
+     * @return the generated GPT or error message
+     */
     @CrossOrigin
     @RequestMapping(value = "/setPara", method = RequestMethod.POST)
     public JSONObject getTree(@RequestBody Generator generator, HttpServletRequest request){

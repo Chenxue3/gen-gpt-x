@@ -1,11 +1,12 @@
 <template>
   <div class="tree" v-loading="loading">
+    <!-- set size -->
     <div class="size-setting">
       <el-button @click="controlScale('bigger')">+</el-button>
       <el-button @click="controlScale('smaller')">-</el-button>
       <el-button @click="controlScale('restore')">1:1</el-button>
     </div>
-
+    <!-- switch tree -->
     <div class="tree-control" v-if="this.isNormal && !this.fullscreen">
       <el-button
         icon="el-icon-arrow-left"
@@ -18,7 +19,7 @@
         ><i class="el-icon-arrow-right el-icon--right"></i
       ></el-button>
     </div>
-
+<!-- swith goal in craft world -->
     <div class="tree-control" v-if="this.isCraftworld && !this.fullscreen">
       <span v-if="this.treeIndex != 0" class="spanNext">
         {{this.craftWorld[this.treeIndex-1].name }} 
@@ -38,10 +39,11 @@
       </span>
       <span v-else class="spanNext">no more~</span>
     </div>
-
+<!-- blocks world -->
     <div class="tree-control" v-if="this.isBlocksworld && !this.fullscreen">
       Block's World
     </div>
+    <!-- show information -->
     <div class="intro">
       <el-popover placement="left" width="300" trigger="hover">
         <intro-g-p-t></intro-g-p-t>
@@ -52,6 +54,7 @@
           style="margin-bottom: 15px"
         ></el-button>
       </el-popover>
+      <!-- download -->
       <el-popover placement="left" title="Download" width="300" trigger="hover">
         <el-button @click="downloadxml()">Download XML</el-button>
         <el-button @click="downloadjson()">Download Json</el-button>
@@ -62,7 +65,7 @@
           circle
         ></el-button>
       </el-popover>
-
+<!-- show parameters -->
       <el-popover v-if="isNormal" placement="left" width="350" trigger="hover">
         <div class="paras">
           <show-paras :paras="this.$route.params.para"></show-paras>
@@ -74,7 +77,7 @@
           style="margin-bottom: 15px"
         ></el-button>
       </el-popover>
-
+<!-- back to home page -->
       <el-tooltip
         effect="light"
         placement="left"
@@ -84,6 +87,8 @@
         <el-button icon="el-icon-s-home" circle @click="backHome()" v-if="!this.fullscreen"></el-button>
       </el-tooltip>
     </div>
+
+  <!-- full screen -->
     <div class="full-screen">
       <el-button
         :icon='fullscreen ? "el-icon-close": "el-icon-full-screen"'
@@ -91,6 +96,7 @@
         @click="setFull()"
       ></el-button>
     </div>
+    <!-- tree -->
     <vue-tree
       ref="scaleTree"
       style="width: 100%; height: 100%; overflow: visible"
@@ -156,6 +162,7 @@ export default {
   },
 
   created() {
+    console.log(this.$route.params.para)
     window.addEventListener("wheel", this.handleScroll);
     this.init();
   },
@@ -249,24 +256,24 @@ export default {
     },
     downloadxml() {
       if (this.isNormal) {
-        location.href = "http://localhost:8081/downloadxml";
+        window.open("http://localhost:8081/downloadxml");
       }
       if (this.isBlocksworld) {
-        location.href = "http://localhost:8081/downloadBlocksWorldXML";
+        window.open("http://localhost:8081/blocksworld.xml");
       }
       if(this.isCraftworld){
-        location.href = "http://localhost:8081/downloadCraftWorldXML";
+        window.open("http://localhost:8081/craftworld.xml");
       }
     },
     downloadjson() {
       if (this.isBlocksworld) {
-        location.href = "http://localhost:8081/downloadBlocksWorldJSON";
+        window.open("http://localhost:8081/downloadBlocksWorldJSON");
       }
       if (this.isNormal) {
-        location.href = "http://localhost:8081/downloadjson";
+        window.open("http://localhost:8081/downloadjson");
       }
       if(this.isCraftworld){
-        location.href = "http://localhost:8081/downloadCraftWorldXML";
+        window.open("http://localhost:8081/downloadCraftWorldJSON");
       }
     },
     controlScale(command) {

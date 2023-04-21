@@ -1,3 +1,11 @@
+
+<!-- 
+ * @description: set parameters
+ * @fileName: setPara.vue
+ * @author: cxs 
+ * @date: 2022-12-24 15:10:29
+ * @version: V1.0.0 
+-->
 <template>
   <div>
     <el-container v-loading="loading">
@@ -138,7 +146,7 @@
           <!-- end -->
 
           <!-- set sy_num_var -->
-          <div class="content">
+          <div v-if="!this.isX" class="content">
             <div class="text">
               {{ setting[5].text }}
             </div>
@@ -161,10 +169,34 @@
               </el-tooltip>
             </div>
           </div>
+
+          <div v-else class="content">
+            <div class="text">
+              {{ setting[8].text }}
+            </div>
+            <div class="set">
+              <el-input-number
+                v-model="sy_num_var"
+                controls-position="right"
+                :step="setting[8].step"
+                :min="setting[8].min"
+                :max="setting[8].max"
+                step-strictly
+              ></el-input-number>
+              <el-tooltip
+                class="item"
+                effect="dark"
+                :content="setting[8].note"
+                placement="top"
+              >
+                <i class="el-icon-warning-outline"></i>
+              </el-tooltip>
+            </div>
+          </div>
           <!-- end -->
 
           <!-- set sy_num_selected -->
-          <div class="content">
+          <div v-if="!this.isX" class="content">
             <div class="text">
               {{ setting[6].text }}
             </div>
@@ -181,6 +213,30 @@
                 class="item"
                 effect="dark"
                 :content="setting[6].note"
+                placement="top"
+              >
+                <i class="el-icon-warning-outline"></i>
+              </el-tooltip>
+            </div>
+          </div>
+
+          <div v-else class="content">
+            <div class="text">
+              {{ setting[9].text }}
+            </div>
+            <div class="set">
+              <el-input-number
+                v-model="sy_num_selected"
+                controls-position="right"
+                :step="setting[9].step"
+                :min="setting[9].min"
+                :max="sy_num_var"
+                step-strictly
+              ></el-input-number>
+              <el-tooltip
+                class="item"
+                effect="dark"
+                :content="setting[9].note"
                 placement="top"
               >
                 <i class="el-icon-warning-outline"></i>
@@ -214,10 +270,36 @@
             </div>
           </div>
           <!-- end -->
+
+          <!-- set group number -->
+          <div v-if="this.isX" class="content">
+            <div class="text">
+              {{ setting[10].text }}
+            </div>
+            <div class="set">
+              <el-input-number
+                v-model="sy_num_var"
+                controls-position="right"
+                :step="setting[10].step"
+                :min="setting[10].min"
+                :max="setting[10].max"
+                step-strictly
+              ></el-input-number>
+              <el-tooltip
+                class="item"
+                effect="dark"
+                :content="setting[10].note"
+                placement="top"
+              >
+                <i class="el-icon-warning-outline"></i>
+              </el-tooltip>
+            </div>
+          </div>
         </el-main>
         <el-footer
-          ><el-button round @click="goPage()" class="create"
-            >Create!</el-button
+          >
+          <el-button round @click="goPage()" class="create"
+            >{{this.text}}</el-button
           ></el-footer
         >
       </el-container>
@@ -232,6 +314,8 @@ export default {
   name: "set-para",
   data() {
     return {
+      text:"Create! by GenGPT",
+      isX: false,
       loading: false,
       seed: 100,
       sy_depth: 3,
@@ -242,6 +326,7 @@ export default {
       sy_num_var: 60,
       sy_num_selected: 30,
       sy_prob_leaf: 0.5,
+      sy_num_group:10,
       setting: [
         {
           text: "Maximum depth of the tree:",
@@ -299,15 +384,101 @@ export default {
           max: 30,
           step: 1,
         },
+        {
+          //8
+          text: "Total number of variables in each group: ",
+          note: "Total number of variables in each group. default 10, greater or eauql than 1",
+          min: 1,
+          max: 200,
+          step: 1,
+        },
+        {
+          //9
+          text: "Number of selected variables for each group:",
+          note: "Number of selected variables for each group, default 6, should be less or equal than the number of variables in each group, and also greater or eauql than 1",
+          min: 1,
+          max: 200,
+          step: 1,
+        },
+        {
+          //10
+          text: "Number of groups:",
+          note: "Number of groups, which is also the number of predictors. Default is 10, should be greater than 1",
+          min: 1,
+          max: 200,
+          step: 1,
+        }
       ],
     };
   },
+  created(){
+    
+    if(this.$route.params.type){
+      this.isX = false;
+    }
+    else{
+      this.isX = true;
+      this.sy_num_selected = 6;
+      this.sy_num_var = 10;
+      this.text = "Create! by GenGPTX";
+    }
+  },
   methods: {
-    handleChange() {
-      //tbc
+  // sent the parameters to the server 
+    createGenGPTX(){
+      this.loading = true;
+      var paras = {
+        seed: this.seed,
+        sy_depth: this.sy_depth,
+        sy_num_tree: this.num_tree,
+        sy_num_goal: this.sy_num_goal,
+        sy_num_plan: this.sy_num_plan,
+        sy_num_var: this.sy_num_var,
+        sy_num_action: this.sy_num_action,
+        sy_num_selected: this.sy_num_selected,
+        sy_prob_leaf: this.sy_prob_leaf,
+        sy_num_group: this.sy_num_group
+      };
+      var that = this;
+      this.$http.post("/setXPara", paras).then((res) => {
+        console.log(res);
+        if (res.status == 200) {
+          that.loading == false;
+          if ("msg" in res.data) {
+            this.$alert(res.data.msg, "Error", {
+              confirmButtonText: "Got it",
+              type: 'error',
+              callback: () => {
+                this.loading = false;
+              },
+            });
+          } else {
+            that.$router.push({
+              name: "tree",
+              params: {
+                data: res.data,
+                para: paras,
+                type: "2",
+              },
+            });
+          }
+        }
+      }).catch((error)=>{
+        this.$alert(error, "Error", {
+              confirmButtonText: "OK",
+              type: 'error',
+              callback: () => {
+                this.loading = false;
+              },
+            });
+      });
     },
     goPage() {
-      this.loading = true;
+      if(this.isX){
+        this.createGenGPTX();
+      }
+      else{
+        this.loading = true;
       var paras = {
         seed: this.seed,
         sy_depth: this.sy_depth,
@@ -352,13 +523,17 @@ export default {
               },
             });
       });
+    }
     },
+    
   },
 };
 </script >
 
 <style scoped>
-.el-header,
+.el-header{
+}
+
 .el-footer {
   color: #333;
   text-align: center;
@@ -404,4 +579,6 @@ export default {
   color: darkgray;
   font-size: 1.3em;
 }
+
+
 </style>

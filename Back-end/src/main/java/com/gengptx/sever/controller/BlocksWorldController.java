@@ -17,12 +17,16 @@ import javax.servlet.http.HttpServletRequest;
  */
 @RestController
 public class BlocksWorldController {
+    /**
+     * return the blocks world GPT
+     * @return generated GPT in json format of Blocks world
+     */
     @CrossOrigin
     @GetMapping("/getBlocksWorld")
-    public JSONObject getBlocksWorld(HttpServletRequest request){
+    public JSONObject getBlocksWorld(){
 
         BlocksWorldService blocksWorldService = new BlocksWorldService();
-        JSONObject jsonObject = blocksWorldService.returnBlocksWorld(request);
+        JSONObject jsonObject = blocksWorldService.returnBlocksWorld();
         return jsonObject;
 
     }

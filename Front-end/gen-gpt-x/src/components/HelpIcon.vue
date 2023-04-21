@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-tooltip effect="dark" placement="bottom" content="Help" >
-      <font-awesome-icon  class="help" icon="fa-solid fa-book" />
+      <font-awesome-icon  class="help" icon="fa-solid fa-book" @click="goHelp()" />
     </el-tooltip>
   </div>
 </template>
@@ -9,11 +9,12 @@
 <script>
 export default {
     created(){
-        console.log("icon ")
+        
     },
     methods:{
+      // go to the help page
         goHelp(){
-            //tbc
+            window.open("https://xueshanchen.github.io/")
         }
     }
 };
