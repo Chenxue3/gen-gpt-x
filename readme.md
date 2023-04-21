@@ -1,7 +1,148 @@
-Front-end:
+# Project Structure
 
-Vue、Router、Vuex、ElementUI、Axios（基于ajax）、Vue-tree-chart （D3.js）、vue-fullscreen
+There are two parts in this project. The front end and the back end. Both are located in the root of this project. `Demostration Video of Website` is the presentation and description of the website, the structure of the front and back ends will be explained in the section after this document.
 
-Vue CLI: 交互式
+# User Manual
 
-老师我改进了这次的XML，但是还有一个问题想问一下：比如我们需要一个Gem，需要的Tool是：Axe。在这之前我们需要先有一个Axe，Axe需要 Iron, stick并在Toolshed加工。获得Stick需要使用Wood在workbench进行加工。我的问题是：在每次使用Axe的时候，需不需要判断是否已经制造过Axe，如果需要判断的话，这个Axe的位置是在加工的Toolshed/某个特定的地点/被agent携带着，还是每次都重新制造新Axe用于这次的生产。
+In this section, a tutorial on the use of this website and the basic setup of this project will be presented. The tutorial is also [Online](https://xueshanchen.github.io/).
+
+## Project Setup
+First, we will give a step-by-step tutorial on how to set up the project. The project is divided into two parts, the front end and the back end, both of which require a good environment to run successfully.
+
+### Front-end Set up
+
+#### Structure
+
+In a front-end project, the files we care about are in the `src` folder, where `views` stores the page files, the components they use are stored in the `components` folder, and `App.vue` is the entry file for the project, which navigates the user to the different The settings for the routes are in `router`. `main.js` is the project's configuration file, which includes the project's package configuration and some other basic configuration (e.g. pom.xml in Maven projects). Finally, `assets` holds the static resources used by the front end. 
+
+#### Setup
+
+Firstly, the front-end is a project based on the Vue framework, so you need to first download the Vue-related support, either via the [npm](https://www.npmjs.com/) package or the [yarn](https://yarnpkg.com/) package, with the following code:
+
+```python
+npm install -g @vue/cli
+# OR
+yarn global add @vue/cli
+```
+
+Afterwards, you can verify that the download has been successful by using the code below.
+
+```cl
+vue --version
+```
+
+If the application does not report any errors, then congratulations, you have successfully downloaded the Vue framework. Next, you need to open the following paths in order and in this path open the command line tool and enter the following command:
+
+```cl
+\20216479\Front-end\gen-gpt-x> npm run-script build
+```
+
+Next, you will need to wait a while. After `DONE` has been returned, the system has been successfully built. Next, simply enter the following command and the front end will run smoothly:
+
+
+
+```
+\20216479\Front-end\gen-gpt-x> npm run serve
+```
+
+If there are no errors, the return will be as follows, meaning the front end has successfully run on the given port (usually at localhost:8080)
+
+```
+      App running at:
+  - Local:   http://localhost:8080/
+  - Network: http://192.168.31.198:8080/
+```
+
+Go to the link and the website will be displayed as follows 
+
+![Snipaste_2023-04-20_12-32-52](https://gitee.com/susanchan/image-stroge/raw/master/Snipaste_2023-04-20_12-32-52.png)
+
+### Back-end Setup
+
+#### Structure
+
+In the back-end, the folder we need to focus on is the `src` folder, where in `main` we do the development and in `test` we do the testing. In `main`, the packages related to handling front and back-end interaction data are `controller`, `entity` and `service`. `SeverApplication` is the starting file for the project. `gengptx` contains the logic related to generating GPTs using GenGPT-X, while `gengpt` contains the logic for generating GPTs from the original GenGPT.
+
+#### Setup
+
+In the back-end build, we rely on an IDEA called [Intellij](https://www.jetbrains.com/idea/). Therefore, if you don't have this IDEA locally, you need to go to the official website and download it.
+After a successful download, we click on open to open a project, where we select open "Back-end", after successfully opening it click on the hammer shape in the top right corner to build the project, after that, we find the following file and click on the green triangle symbol on the left to run it:
+
+```python
+    ..\20216479\Back-end\src\main\java\com\gengptx\sever\SeverApplication.java
+```
+
+Once successfully run, you will see the following shape and display "Started SeverApplication in xxx seconds (JVM running for 6.204)".
+
+```text
+    .   ____           
+   /\\ / ___'_ __ _ _(_)_ __  __ _ 
+  ( ( )\___ | '_ | '_| | '_ \/ _` |
+   \\/  ___)| |_)| | | | | || (_| |
+    '  |____| .__|_| |_|_| |_|\__, |
+   =========|_|==============|___/ 
+   :: Spring Boot ::                     
+```
+
+
+
+# Website Tutorial
+
+Now, it's time to use the features brought by the GenGPT-X.
+
+In this section, we will show how to use this website. There is also the option of watching a video presentation via [Youtube](https://youtu.be/i_ZFhoxsFcM).
+Firstly, the user can choose from three ways of generating GPTs, as follows:
+
+<img src="../../web/XueshanChen.github.io/IntroGenGPT-X/static/mannal/index/example.png" alt="example" style="zoom:25%;" /><img src="https://gitee.com/susanchan/image-stroge/raw/master/gengpt.png" alt="gengpt" style="zoom:25%;" /><img src="https://gitee.com/susanchan/image-stroge/raw/master/gengptx.png" alt="gengptx" style="zoom:25%;" />
+
+The GPT can be generated by selecting an actual example or by choosing to use GenGPT or GenGPT-X, respectively. The user is asked to enter the relevant parameters when choosing to generate the GPT using the generator, as shown below (Figure \ref{para-set}).
+
+![Set Parameters](https://gitee.com/susanchan/image-stroge/raw/master/setpara.png)
+
+##### User can view the information of the parameter
+
+![icon_info](https://gitee.com/susanchan/image-stroge/raw/master/icon_info.png)
+
+##### Click on Generate and the page will display the entire generated GPT.
+
+![origin](https://gitee.com/susanchan/image-stroge/raw/master/origin.png)
+
+##### Users can fold some nodes that they do not want to learn.![fold](../../web/XueshanChen.github.io/IntroGenGPT-X/static/mannal/gengptx/fold.png)
+
+##### To gain a better experience, user can also use a full screen to view the whole tree.
+
+![full](https://gitee.com/susanchan/image-stroge/raw/master/full.png)
+
+
+
+
+
+##### When the user hovers over a node, the information of this node will be shown.
+
+![hover](https://gitee.com/susanchan/image-stroge/raw/master/hover.png)
+
+##### Users can click icons "+" or "-" to control the size of the GPT.
+
+<img src="https://gitee.com/susanchan/image-stroge/raw/master/bingger.png" alt="bingger" style="zoom: 50%;" /><img src="../../web/XueshanChen.github.io/IntroGenGPT-X/static/mannal/gengptx/smaller.png" alt="smaller" style="zoom: 50%;" />
+
+##### Related information is also provided, for example, the parameters that we have set for this 
+
+![para](https://gitee.com/susanchan/image-stroge/raw/master/para.png)
+
+##### If the user is confused about the type of the node etc. Users can hover over the information icon.
+
+<img src="https://gitee.com/susanchan/image-stroge/raw/master/info.png" alt="info" style="zoom:67%;" />
+
+##### The XML and JSON versions can also be downloaded.![download](https://gitee.com/susanchan/image-stroge/raw/master/download.png)
+
+
+
+##### Users can generate more than one GPT and the GPTs can be switched by following icons:
+
+![change_tree](https://gitee.com/susanchan/image-stroge/raw/master/change_tree.png)
+
+##### In addition, two real-life examples are provided for users to choose from.
+
+![blocks](https://gitee.com/susanchan/image-stroge/raw/master/blocks.png)
+
+![craft](https://gitee.com/susanchan/image-stroge/raw/master/craft.png)
